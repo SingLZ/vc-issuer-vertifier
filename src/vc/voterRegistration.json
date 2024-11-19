@@ -1,0 +1,32 @@
+{
+    "@context": [
+     "https://www.w3.org/ns/credentials/v2",
+     "https://www.w3.org/ns/credentials/examples/v2"
+    ],
+    "id": "${baseURL}/credentials/3732",
+    "type": [
+     "VerifiableCredential",
+     "VotingRegistrationCredential"
+    ],
+    "issuer": {
+        "id": "some:gov",
+        "name": "USA Voting System"
+    },
+    "name": "Voting Registration",
+    "description": "Registration for testing purpose only",
+    "validFrom": "$2024-11-15",
+    "credentialStatus": {
+        "id": "${baseURL}/credentials/status/3#${revocationIndex}",
+        "type": "BitstringStatusListEntry",
+        "statusPurpose": "revocation",
+        "statusListIndex": "${revocationIndex}",
+       "statusListCredential": "${baseURL}/credentials/status/3"
+    },
+    "credentialSubject": {
+        "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+        "voterRegistration": {
+            "state": "PA",
+            "status": "Not Register"
+        }
+    }
+}

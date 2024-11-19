@@ -1,6 +1,7 @@
 // Import the required module
 import * as transmute from '@transmute/verifiable-credentials';
-
+import * as jose from 'jose'
+import { generateKeyPairs, alg } from './keyService.ts';
 // Define types for the Verifiable Credential structure
 interface CredentialSubject {
   id: string;
@@ -16,43 +17,23 @@ interface VerifiableCredential {
   credentialSubject: CredentialSubject;
 }
 
-const decoder = new TextDecoder("utf-8");
-const alg = 'ES256';
+const statusListSize = 131072;
+const revocationIndex = 94567;
+const suspensionIndex = 23452;
 
-async function generateKeyPairs() {
-    const privateKey = await transmute.key.generate({
-    alg,
-    type: "application/jwk+json",
-    });
-  // console.log(new TextDecoder().decode(privateKey))
-  // {
-  //   "kid": "xSgm4GQOT_ZyYFApew0GnRvPWt70omVJV9XVB5tsmN8",
-  //   "alg": "ES256",
-  //   "kty": "EC",
-  //   "crv": "P-256",
-  //   "x": "XRkZngz2KSCrLdXKGCRNyDzBgsovioZIqMWnF42nmdg",
-  //   "y": "H2t6Xxdg8p8Cqn2-hsuWnXYj0192He4zTZghAxNXllo",
-  //   ...
-  // }
+const issuer = `did:example:123`;
+const baseURL = `https://vendor.example/api`;
 
-  // Output the private key
-  console.log(decoder.decode(privateKey));
-
-  const publicKey = await transmute.key.publicFromPrivate({
-    type: "application/jwk+json",
-    content: privateKey,
-  });
-  // console.log(new TextDecoder().decode(publicKey))
-  // {
-  //   "kid": "xSgm4GQOT_ZyYFApew0GnRvPWt70omVJV9XVB5tsmN8",
-  //   "alg": "ES256",
-  //   "kty": "EC",
-  //   "crv": "P-256",
-  //   "x": "XRkZngz2KSCrLdXKGCRNyDzBgsovioZIqMWnF42nmdg",
-  //   "y": "H2t6Xxdg8p8Cqn2-hsuWnXYj0192He4zTZghAxNXllo",
-  // }
-  
- console.log(decoder.decode(publicKey));
-}
-
-generateKeyPairs();
+const issuerSigner = {
+  sign: async (bytes: Uint8Array) => {
+    const jws = await new jose.CompactSign(bytes)
+      .setProtectedHeader({ kid: `${issuer}#key-42`, alg })
+      .sign(
+        await transmute.key.importKeyLike({
+          type: "application/jwk+json",
+          content: (await generateKeyPairs()).privateKey,
+        })
+      );
+    return transmute.text.encoder.encode(jws);
+  },
+};
