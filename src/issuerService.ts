@@ -2,7 +2,7 @@ import * as transmute from '@transmute/verifiable-credentials';
 
 
 
-  export async function issued(request: transmute.RequestCredentialIssuer, content: Uint8Array): Promise<Uint8Array> {
+export async function issued(request: transmute.RequestCredentialIssuer, content: Uint8Array): Promise<Uint8Array> {
 
     const signedCredential =  await transmute
         .issuer({

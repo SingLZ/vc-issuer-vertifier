@@ -1,0 +1,12 @@
+// filepath: /Users/lixingzheng/Downloads/vc-issuer-vertifier/tsconfig.json
+{
+    "compilerOptions": {
+      "target": "es2017",
+      "module": "commonjs",
+      "strict": true,
+      "esModuleInterop": true,
+      "resolveJsonModule": true,
+      "outDir": "./dist"
+    },
+    "include": ["src/**/*"]
+  }

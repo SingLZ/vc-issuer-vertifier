@@ -5,7 +5,13 @@ export type keyOutput = {
     publicKey: Uint8Array
 }
 
-export const alg =  'ES256';
+
+
+import { SupportedSignatureAlgorithms } from '@transmute/verifiable-credentials';
+
+
+
+export const alg: SupportedSignatureAlgorithms = 'ES256';
 
 export const generateKeyPairs = async () : Promise<keyOutput> => {
     //const decoder = new TextDecoder("utf-8");
